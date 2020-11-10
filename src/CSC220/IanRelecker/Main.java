@@ -1,15 +1,18 @@
 package CSC220.IanRelecker;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 
+
 public class Main extends JFrame {
-    private final int width = 10;
+    private final int width = 500;
     private final int height = 600;
     private ControlPanel controlpanel;
     private PlayArea playArea;
 
     Main(){
+        super();
         setTitle("Java Swing Tetris");
         setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,9 +20,9 @@ public class Main extends JFrame {
         setLocationRelativeTo(null);
         controlpanel = new ControlPanel();
         playArea = new PlayArea();
-        controlpanel.setSize(100,600);
-        this.add(controlpanel, BorderLayout.WEST);
+        this.add(controlpanel, BorderLayout.CENTER);
         this.add(playArea, BorderLayout.EAST);
+        playArea.repaint();
         setVisible(true);
         setResizable(false);
     }
@@ -36,58 +39,54 @@ public class Main extends JFrame {
 
         ControlPanel(){
 
-
-
-
-
-
             startButton = new JButton("Start");
             this.add(startButton);
             scoreLabel = new JLabel("Score");
-            this.add(scoreLabel,0);
+            this.add(scoreLabel);
             scoreNumberText = new JTextArea();
             scoreNumberText.setText("     0     ");
-            this.add(scoreNumberText,0);
+            scoreNumberText.setEditable(false);
+            this.add(scoreNumberText);
             nextPiece = new JLabel("Next Piece");
-            this.add(nextPiece,0);
+            this.add(nextPiece);
             panelNextPiece = new JPanel();
-            panelNextPiece.setSize(20,20);
-            this.add(panelNextPiece,0);
+            panelNextPiece.add(new TextArea());
+            this.add(panelNextPiece);
             loadButton = new JButton("Load");
-            this.add(loadButton,0);
+            this.add(loadButton);
             saveButton = new JButton("Save");
-            this.add(saveButton,0);
+            this.add(saveButton);
 
-            //where to add functionality
+
+
+
+
+
 
 
 
             setLayout(new FlowLayout());
-            setSize(100,600);
-            setVisible(true);
         }
 
     }
     public class PlayArea extends JPanel{
 
-
         PlayArea(){
-            int rows = 40;
-            int columns = 40;
+            super();
+            int rows = 12;
+            int columns = 12;
+
             JPanel[][] gridArrange = new JPanel[rows][columns];
             setLayout(new GridLayout(rows,columns));
             for (int a=0; a<rows; a++){
                 for (int b=0; b<columns; b++){
-                    gridArrange[a][b] = new JPanel();
+                    JPanel holdingPanel = new JPanel();
+                    holdingPanel.setPreferredSize(new Dimension(34,5));
+                    holdingPanel.setBorder(new BasicBorders.FieldBorder(Color.BLACK, null, null, null));
+                    gridArrange[a][b] = holdingPanel;
                     this.add(gridArrange[a][b]);
                 }
             }
-
-
-
-            setSize(400,600);
-            setVisible(true);
-
         }
     }
 
