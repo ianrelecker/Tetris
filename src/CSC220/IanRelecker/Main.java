@@ -6,8 +6,8 @@ import java.awt.*;
 
 
 public class Main extends JFrame {
-    private final int width = 500;
-    private final int height = 600;
+    private final int width = 400;
+    private final int height = 700;
     private ControlPanel controlpanel;
     private PlayArea playArea;
 
@@ -24,7 +24,6 @@ public class Main extends JFrame {
         this.add(playArea, BorderLayout.EAST);
         playArea.repaint();
         setVisible(true);
-        setResizable(false);
     }
 
     public class ControlPanel extends JPanel{
@@ -56,15 +55,6 @@ public class Main extends JFrame {
             this.add(loadButton);
             saveButton = new JButton("Save");
             this.add(saveButton);
-
-
-
-
-
-
-
-
-
             setLayout(new FlowLayout());
         }
 
@@ -73,15 +63,15 @@ public class Main extends JFrame {
 
         PlayArea(){
             super();
-            int rows = 12;
-            int columns = 12;
+            int rows = 30;
+            int columns = 10;
 
             JPanel[][] gridArrange = new JPanel[rows][columns];
             setLayout(new GridLayout(rows,columns));
             for (int a=0; a<rows; a++){
                 for (int b=0; b<columns; b++){
                     JPanel holdingPanel = new JPanel();
-                    holdingPanel.setPreferredSize(new Dimension(34,5));
+                    holdingPanel.setPreferredSize(new Dimension(30,20));
                     holdingPanel.setBorder(new BasicBorders.FieldBorder(Color.BLACK, null, null, null));
                     gridArrange[a][b] = holdingPanel;
                     this.add(gridArrange[a][b]);
