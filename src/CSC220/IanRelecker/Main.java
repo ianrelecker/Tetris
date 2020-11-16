@@ -66,7 +66,7 @@ public class Main extends JFrame {
         public void prepButtons(){
             startButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-
+                    playArea.testingGrid();
                 }
             });
             loadButton.addActionListener(new ActionListener() {
@@ -89,13 +89,21 @@ public class Main extends JFrame {
 
     }
     public class PlayArea extends JPanel{
+        //going to arrange the grid so that it is (yyx)
+        //example top left 000
+        //example bottom right 299
+        public JPanel[][] gridArrange;
+        public int position;
+        public int[] block;
+        public boolean running;
+        movingdwnthread mvndwnthread;
 
         PlayArea(){
             super();
             int rows = 30;
             int columns = 10;
 
-            JPanel[][] gridArrange = new JPanel[rows][columns];
+            gridArrange = new JPanel[rows][columns];
             setLayout(new GridLayout(rows,columns));
             for (int a=0; a<rows; a++){
                     for (int b=0; b<columns; b++){
@@ -107,6 +115,26 @@ public class Main extends JFrame {
                 }
             }
         }
+        public void testingGrid() {
+            gridArrange[5][5].setBackground(Color.BLACK);
+        }
+        public void startmovingdown(){
+            //starting the tread for moving it down
+            mvndwnthread = new movingdwnthread();
+            mvndwnthread.start();
+        }
+        public void endmovingdown() {
+            mvndwnthread.interrupt();
+        }
+        public int parseY(){
+            int temp = position;
+            temp /= 10;
+            return Math.round(temp);
+        }
+        public int parseX(){
+            return position % 10;
+        }
+
     }
 
 
