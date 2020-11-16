@@ -3,6 +3,8 @@ package CSC220.IanRelecker;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class Main extends JFrame {
@@ -38,7 +40,12 @@ public class Main extends JFrame {
 
         ControlPanel(){
 
+
             startButton = new JButton("Start");
+            loadButton = new JButton("Load");
+            saveButton = new JButton("Save");
+            prepButtons();
+
             this.add(startButton);
             scoreLabel = new JLabel("Score");
             this.add(scoreLabel);
@@ -51,11 +58,33 @@ public class Main extends JFrame {
             panelNextPiece = new JPanel();
             panelNextPiece.add(new TextArea());
             this.add(panelNextPiece);
-            loadButton = new JButton("Load");
-            this.add(loadButton);
-            saveButton = new JButton("Save");
-            this.add(saveButton);
             setLayout(new FlowLayout());
+            this.add(loadButton);
+            this.add(saveButton);
+        }
+
+        public void prepButtons(){
+            startButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            loadButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser loader = new JFileChooser();
+                    if (loader.showDialog(null, "Open") == JFileChooser.APPROVE_OPTION){
+                        System.out.println(loader.getSelectedFile().getName());
+                    }
+                }
+            });
+            saveButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser saver = new JFileChooser();
+                    if (saver.showDialog(null, "Save") == JFileChooser.APPROVE_OPTION){
+                        System.out.println(saver.getSelectedFile().getName());
+                    }
+                }
+            });
         }
 
     }
@@ -69,7 +98,7 @@ public class Main extends JFrame {
             JPanel[][] gridArrange = new JPanel[rows][columns];
             setLayout(new GridLayout(rows,columns));
             for (int a=0; a<rows; a++){
-                for (int b=0; b<columns; b++){
+                    for (int b=0; b<columns; b++){
                     JPanel holdingPanel = new JPanel();
                     holdingPanel.setPreferredSize(new Dimension(30,20));
                     holdingPanel.setBorder(new BasicBorders.FieldBorder(Color.BLACK, null, null, null));
