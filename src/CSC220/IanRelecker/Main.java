@@ -66,7 +66,12 @@ public class Main extends JFrame {
         public void prepButtons(){
             startButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    playArea.testingGrid();
+                    if (playArea.running){
+                        playArea.running = true;
+                        playArea.endmovingdown();
+                    }else{
+                    playArea.startmovingdown();
+                    }
                 }
             });
             loadButton.addActionListener(new ActionListener() {
@@ -118,9 +123,12 @@ public class Main extends JFrame {
         public void testingGrid() {
             gridArrange[5][5].setBackground(Color.BLACK);
         }
+
         public void startmovingdown(){
             //starting the tread for moving it down
-            mvndwnthread = new movingdwnthread();
+            //testing with a block
+            position = 000;
+            mvndwnthread = new movingdwnthread(position, block, running, gridArrange);
             mvndwnthread.start();
         }
         public void endmovingdown() {
