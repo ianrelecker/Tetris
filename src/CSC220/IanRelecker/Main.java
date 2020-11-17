@@ -5,6 +5,8 @@ import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
 public class Main extends JFrame {
@@ -12,6 +14,11 @@ public class Main extends JFrame {
     private final int height = 700;
     private ControlPanel controlpanel;
     private PlayArea playArea;
+    public JPanel[][] gridArrange;
+    public int position;
+    public int[] block;
+    public boolean running;
+    movingdwnthread mvndwnthread;
 
     Main(){
         super();
@@ -26,6 +33,7 @@ public class Main extends JFrame {
         this.add(playArea, BorderLayout.EAST);
         playArea.repaint();
         setVisible(true);
+        playArea.requestFocus();
     }
 
     public class ControlPanel extends JPanel{
@@ -66,11 +74,12 @@ public class Main extends JFrame {
         public void prepButtons(){
             startButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (playArea.running){
-                        playArea.running = true;
+                    if (running){
+                        running = false;
                         playArea.endmovingdown();
                     }else{
-                    playArea.startmovingdown();
+                        running = true;
+                        playArea.startmovingdown();
                     }
                 }
             });
@@ -94,14 +103,10 @@ public class Main extends JFrame {
 
     }
     public class PlayArea extends JPanel{
-        //going to arrange the grid so that it is (yyx)
-        //example top left 000
-        //example bottom right 299
-        public JPanel[][] gridArrange;
-        public int position;
-        public int[] block;
-        public boolean running;
-        movingdwnthread mvndwnthread;
+        //going to arrange the grid so that it is (1yyx)
+        //example top left 1000
+        //example bottom right 1299
+        public int keypressed;
 
         PlayArea(){
             super();
@@ -119,6 +124,28 @@ public class Main extends JFrame {
                     this.add(gridArrange[a][b]);
                 }
             }
+            keyactions();
+
+        }
+
+        public void keyactions(){
+            this.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    keypressed = e.getKeyCode();
+                    keyactionsthread apple = new keyactionsthread(position, block, running, gridArrange);
+                    apple.run(keypressed);
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+
+                }
+            });
         }
         public void testingGrid() {
             gridArrange[5][5].setBackground(Color.BLACK);
@@ -127,8 +154,8 @@ public class Main extends JFrame {
         public void startmovingdown(){
             //starting the tread for moving it down
             //testing with a block
-            position = 000;
-            mvndwnthread = new movingdwnthread(position, block, running, gridArrange);
+            position = 1004;
+            mvndwnthread = new movingdwnthread(position, block, running, gridArrange, keypressed);
             mvndwnthread.start();
         }
         public void endmovingdown() {
