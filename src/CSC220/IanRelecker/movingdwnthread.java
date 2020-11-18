@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
+//DONT NEED
+
 public class movingdwnthread extends Thread{
     public boolean running;
     public int position;
@@ -28,12 +30,13 @@ public class movingdwnthread extends Thread{
             position += 10;
             gridArrange[parseY()-100][parseX()].setBackground(Color.BLACK);
 //            System.out.println('a');
-            try {
-                //speed that the blocks fall at
-                TimeUnit.MILLISECONDS.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            //going to do the timer instead of this
+//            try {
+//                //speed that the blocks fall at
+//                TimeUnit.MILLISECONDS.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
 
 

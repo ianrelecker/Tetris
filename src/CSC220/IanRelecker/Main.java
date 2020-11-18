@@ -15,10 +15,24 @@ public class Main extends JFrame {
     private ControlPanel controlpanel;
     private PlayArea playArea;
     public JPanel[][] gridArrange;
-    public int position;
+    public int position = 1004;
     public int[] block;
     public boolean running;
     movingdwnthread mvndwnthread;
+
+    //color stuff
+    Color [] colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.ORANGE};
+
+
+    public Timer timer  =new Timer(500, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(Color.WHITE);
+            position += 10;
+            gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(Color.BLACK);
+            gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(colors[(int) (colors.length*Math.random())]);
+        }
+    });
 
     Main(){
         super();
@@ -76,11 +90,14 @@ public class Main extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     if (running){
                         running = false;
-                        playArea.endmovingdown();
+//                        playArea.endmovingdown();
+                        playArea.stoptimer();
                     }else{
                         running = true;
-                        playArea.startmovingdown();
+//                        playArea.startmovingdown();
+                        playArea.starttimer();
                     }
+                    playArea.requestFocus();
                 }
             });
             loadButton.addActionListener(new ActionListener() {
@@ -137,8 +154,7 @@ public class Main extends JFrame {
                 @Override
                 public void keyPressed(KeyEvent e) {
                     keypressed = e.getKeyCode();
-                    keyactionsthread apple = new keyactionsthread(position, block, running, gridArrange);
-                    apple.run(keypressed);
+                    System.out.println(keypressed);
                 }
 
                 @Override
@@ -147,8 +163,11 @@ public class Main extends JFrame {
                 }
             });
         }
-        public void testingGrid() {
-            gridArrange[5][5].setBackground(Color.BLACK);
+        public void starttimer() {
+            timer.start();
+        }
+        public void stoptimer(){
+            timer.stop();
         }
 
         public void startmovingdown(){
