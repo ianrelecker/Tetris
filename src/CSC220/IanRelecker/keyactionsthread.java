@@ -23,6 +23,7 @@ public class keyactionsthread extends Thread{
         int y = parseY() -100;
         int x = parseX();
 
+        //need to finish these so that they move the block
         if (keypressed == 37){
 
         }
