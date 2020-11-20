@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
-//DONT NEED
+//DONT NEED dropped in v2.2
 
 public class movingdwnthread extends Thread{
     public boolean running;
