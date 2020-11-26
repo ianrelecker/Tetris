@@ -18,19 +18,81 @@ public class Main extends JFrame {
     public int position = 1004;
     public int[] block;
     public boolean running;
-    movingdwnthread mvndwnthread;
+
 
     //color stuff
-    Color [] colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.ORANGE};
+//    Color [] colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.ORANGE};
+//    gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(colors[(int) (colors.length*Math.random())]);
 
+
+    public int parseY(){
+        int temp = position;
+        temp /= 10;
+        return Math.round(temp);
+    }
+    public int parseX(){
+        return position % 10;
+    }
+
+
+    public boolean moveChecker() {
+        boolean blocked;
+        int x = parseX();
+        int y = parseY() - 100;
+        if (x==0 && y==0){
+            blocked = false;
+        }
+        else if (x==0){
+            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+        else if (y==0) {
+            if ((gridArrange[y][x + 1].getBackground() == Color.BLACK) || (gridArrange[y][x - 1].getBackground() == Color.BLACK)) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+        else if (x==29){
+            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+        else if (y==29) {
+            if ((gridArrange[y][x + 1].getBackground() == Color.BLACK) || (gridArrange[y][x - 1].getBackground() == Color.BLACK)) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+        else if((gridArrange[y][x+1].getBackground() == Color.BLACK) || (gridArrange[y][x-1].getBackground() == Color.BLACK) ||
+                (gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)){
+            blocked = true;
+        }else {
+            blocked = false;
+        }
+        return blocked;
+    }
 
     public Timer timer  =new Timer(500, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(Color.WHITE);
-            position += 10;
-            gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(Color.BLACK);
-            gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(colors[(int) (colors.length*Math.random())]);
+            if (!moveChecker()) {
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                position += 10;
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
+            }
+
+            if ((position/10) -100 == 29 || gridArrange[parseY() - 99][parseX()].getBackground() == Color.BLACK){
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
+                position = 1004;
+            }
+
         }
     });
 
@@ -145,6 +207,7 @@ public class Main extends JFrame {
 
         }
 
+
         public void keyactions(){
             this.addKeyListener(new KeyListener() {
                 @Override
@@ -155,6 +218,18 @@ public class Main extends JFrame {
                 public void keyPressed(KeyEvent e) {
                     keypressed = e.getKeyCode();
                     System.out.println(keypressed);
+                    if (keypressed == 37 && !moveChecker()){
+                        gridArrange[parseY()-100][parseX()].setBackground(Color.WHITE);
+                        position -= 1;
+                    }
+                    if (keypressed == 39 && !moveChecker()){
+                        gridArrange[parseY()-100][parseX()].setBackground(Color.WHITE);
+                        position += 1;
+                    }
+                    if (keypressed == 40 && !moveChecker()){
+                        gridArrange[parseY()-100][parseX()].setBackground(Color.WHITE);
+                        position += 10;
+                    }
                 }
 
                 @Override
@@ -170,24 +245,18 @@ public class Main extends JFrame {
             timer.stop();
         }
 
-        public void startmovingdown(){
-            //starting the tread for moving it down
-            //testing with a block
-            position = 1004;
-            mvndwnthread = new movingdwnthread(position, block, running, gridArrange, keypressed);
-            mvndwnthread.start();
-        }
-        public void endmovingdown() {
-            mvndwnthread.interrupt();
-        }
-        public int parseY(){
-            int temp = position;
-            temp /= 10;
-            return Math.round(temp);
-        }
-        public int parseX(){
-            return position % 10;
-        }
+//        public void startmovingdown(){
+//            //starting the tread for moving it down
+//            //testing with a block
+//            position = 1004;
+//            mvndwnthread = new movingdwnthread(position, block, running, gridArrange, keypressed);
+//            mvndwnthread.start();
+//        }
+//        public void endmovingdown() {
+//            mvndwnthread.interrupt();
+//        }
+
+
 
     }
 

@@ -2,9 +2,7 @@ package CSC220.IanRelecker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
-//DONT NEED dropped in v2.2
 
 public class movingdwnthread extends Thread{
     public boolean running;
@@ -38,7 +36,6 @@ public class movingdwnthread extends Thread{
 //                e.printStackTrace();
 //            }
         }
-
 
     }
 
