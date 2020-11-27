@@ -79,10 +79,44 @@ public class Main extends JFrame {
         return blocked;
     }
 
+    public boolean liteMoveChecker() {
+
+        boolean blocked;
+        int x = parseX();
+        int y = parseY() - 100;
+        System.out.println(x + "x");
+        System.out.println(y + "y");
+
+        if (y==0){
+            blocked = false;
+        }
+        else if (x==0){
+            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+        else if (x==29){
+            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+
+        else if((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)){
+            blocked = true;
+        }else {
+            blocked = false;
+        }
+        return blocked;
+    }
+
     public Timer timer  =new Timer(500, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!moveChecker()) {
+            if (!liteMoveChecker()) {
                 gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
                 position += 10;
                 gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
@@ -226,10 +260,13 @@ public class Main extends JFrame {
                         gridArrange[parseY()-100][parseX()].setBackground(Color.WHITE);
                         position += 1;
                     }
+                    //issues with skipping blocks when moving down
+                    /*
                     if (keypressed == 40 && !moveChecker()){
                         gridArrange[parseY()-100][parseX()].setBackground(Color.WHITE);
                         position += 10;
                     }
+                    */
                 }
 
                 @Override
