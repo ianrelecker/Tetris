@@ -18,11 +18,9 @@ public class Main extends JFrame {
     public int position = 1004;
     public int[] block;
     public boolean running;
+    int rows = 30;
+    int columns = 10;
 
-
-    //color stuff
-//    Color [] colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.ORANGE};
-//    gridArrange[playArea.parseY()-100][playArea.parseX()].setBackground(colors[(int) (colors.length*Math.random())]);
 
 
     public int parseY(){
@@ -56,7 +54,7 @@ public class Main extends JFrame {
                 blocked = false;
             }
         }
-        else if (x==29){
+        else if (x==9){
             if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
                 blocked = true;
             }else{
@@ -80,12 +78,13 @@ public class Main extends JFrame {
     }
 
     public boolean liteMoveChecker() {
-
         boolean blocked;
         int x = parseX();
         int y = parseY() - 100;
+        /*
         System.out.println(x + "x");
         System.out.println(y + "y");
+        */
 
         if (y==0){
             blocked = false;
@@ -113,14 +112,52 @@ public class Main extends JFrame {
         return blocked;
     }
 
-    public Timer timer  =new Timer(500, new ActionListener() {
+    public Timer timer  =new Timer(50, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            // gamerules can go here bc this is when the block gets moved down
             if (!liteMoveChecker()) {
                 gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
                 position += 10;
                 gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
             }
+
+            //dance party mode that checks the coverage of all of the spaces
+            /*
+            Color [] colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.ORANGE};
+            for (int i=0; i<rows; i++){
+                    for (int a=0; a<columns; a++){
+                        gridArrange[i][a].setBackground(colors[(int) (colors.length*Math.random())]);
+                    }
+                }
+
+            */
+
+            //if a row is filled then remove the row and move everything down by 1
+            for (int i=0; i<rows; i++){
+//                System.out.println(i + "i");
+                    for (int a=0; a<columns; a++){
+                        if (gridArrange[i][a].getBackground() == Color.WHITE){
+                               System.out.println(a);
+                               break;
+                        }if (a == 9){
+                            System.out.println("works");
+                            for (int b=0; b<columns; b++){
+                                gridArrange[i][b].setBackground(Color.WHITE);
+                            }
+                            int reverseRow = 29-i;
+                            for (int s=0;s<reverseRow;s++){
+                                for (int d=9; d>0; d--){
+                                    if (gridArrange[s][d].getBackground() == Color.BLACK){
+                                        gridArrange[s][d].setBackground(Color.WHITE);
+                                        gridArrange[s+1][d].setBackground(Color.WHITE);
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
+
 
             if ((position/10) -100 == 29 || gridArrange[parseY() - 99][parseX()].getBackground() == Color.BLACK){
                 gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
@@ -251,14 +288,22 @@ public class Main extends JFrame {
                 @Override
                 public void keyPressed(KeyEvent e) {
                     keypressed = e.getKeyCode();
-                    System.out.println(keypressed);
-                    if (keypressed == 37 && !moveChecker()){
-                        gridArrange[parseY()-100][parseX()].setBackground(Color.WHITE);
-                        position -= 1;
+//                    System.out.println(keypressed);
+                    if (keypressed == 37 && !moveChecker()) {
+                        if (parseX() == 0) {
+//                            System.out.println("fail");
+                        } else {
+                            gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                            position -= 1;
+                        }
                     }
                     if (keypressed == 39 && !moveChecker()){
-                        gridArrange[parseY()-100][parseX()].setBackground(Color.WHITE);
-                        position += 1;
+                        if (parseX() == 9) {
+//                            System.out.println("fail");
+                        }else{
+                            gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                            position += 1;
+                        }
                     }
                     //issues with skipping blocks when moving down
                     /*
