@@ -1,5 +1,4 @@
 package CSC220.IanRelecker;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
@@ -7,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-
 public class Main extends JFrame {
     private final int width = 400;
     private final int height = 700;
@@ -16,12 +13,10 @@ public class Main extends JFrame {
     private PlayArea playArea;
     public JPanel[][] gridArrange;
     public int position = 1004;
+    public int[] block;
     public boolean running;
     int rows = 30;
     int columns = 10;
-
-
-
     public int parseY(){
         int temp = position;
         temp /= 10;
@@ -30,8 +25,6 @@ public class Main extends JFrame {
     public int parseX(){
         return position % 10;
     }
-
-
     public boolean moveChecker() {
         boolean blocked;
         int x = parseX();
@@ -75,7 +68,6 @@ public class Main extends JFrame {
         }
         return blocked;
     }
-
     public boolean liteMoveChecker() {
         boolean blocked;
         int x = parseX();
@@ -84,26 +76,24 @@ public class Main extends JFrame {
         System.out.println(x + "x");
         System.out.println(y + "y");
         */
-
         if (y==0){
             blocked = false;
         }
-        else if (y==0){
-            if (gridArrange[y+1][x].getBackground() == Color.BLACK) {
+        else if (x==0){
+            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
                 blocked = true;
             }else{
                 blocked = false;
             }
         }
-        else if (y==29){
-            if (gridArrange[y-1][x].getBackground() == Color.BLACK) {
+        else if (x==29){
+            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
                 blocked = true;
             }else{
                 blocked = false;
             }
         }
-
-        else if((gridArrange[y+1][x].getBackground() == Color.BLACK)){
+        else if((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)){
             blocked = true;
         }else {
             blocked = false;
@@ -111,53 +101,17 @@ public class Main extends JFrame {
         return blocked;
     }
 
-    public boolean blockMoveChecker() {
-        boolean blocked;
-        int x = parseX();
-        int y = parseY() - 100;
-        /*
-        System.out.println(x + "x");
-        System.out.println(y + "y");
-        */
-
-        if (y==0){
-            blocked = false;
-        }
-        else if (y==0){
-            if (gridArrange[y+1][x].getBackground() == Color.BLACK) {
-                blocked = true;
-            }else{
-                blocked = false;
-            }
-        }
-        else if (y==29){
-            if (gridArrange[y-1][x].getBackground() == Color.BLACK) {
-                blocked = true;
-            }else{
-                blocked = false;
-            }
-        }
-
-        else if((gridArrange[y+1][x].getBackground() == Color.BLACK)){
-            blocked = true;
-        }else {
-            blocked = false;
-        }
-        return blocked;
-    }
-
-
-    int blocks = 0;
-    int nextBlock = 0;
     int score = -1;
 
-    public Timer timer = new Timer(500, new ActionListener() {
+    public Timer timer  =new Timer(50, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             // gamerules can go here bc this is when the block gets moved down
-            //
-            // adding more blocks
-
+            if (!liteMoveChecker()) {
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                position += 10;
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
+            }
             //dance party mode that checks the coverage of all of the spaces
             /*
             Color [] colors = {Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.ORANGE};
@@ -166,51 +120,10 @@ public class Main extends JFrame {
                         gridArrange[i][a].setBackground(colors[(int) (colors.length*Math.random())]);
                     }
                 }
-
             */
 
-
-            // locks the block to a single block
-            blocks = 0;
-
-            //two on top
-            if (!blockMoveChecker() && blocks ==0) {
-                System.out.println(position + "p");
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                gridArrange[parseY() - 99][parseX()].setBackground(Color.WHITE);
-                position += 10;
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
-                gridArrange[parseY() - 99][parseX()].setBackground(Color.GRAY);
-            }else{
-                nextBlock = Math.round((int)(Math.random() * 6));
-            }
-            //single block
-            if (!liteMoveChecker() && blocks == 1) {
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                position += 10;
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
-            }else{
-                nextBlock = Math.round((int)(Math.random() * 6));
-            }
-            //cube
-            if (!blockMoveChecker() && blocks == 2) {
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                gridArrange[parseY() - 101][parseX()].setBackground(Color.WHITE);
-                gridArrange[parseY() - 101][parseX()-1].setBackground(Color.WHITE);
-                gridArrange[parseY() - 100][parseX()-1].setBackground(Color.WHITE);
-                position += 10;
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
-                gridArrange[parseY() - 101][parseX()].setBackground(Color.BLACK);
-                gridArrange[parseY() - 101][parseX()-1].setBackground(Color.BLACK);
-                gridArrange[parseY() - 100][parseX()-1].setBackground(Color.BLACK);
-            }else{
-                nextBlock = Math.round((int)(Math.random() * 6));
-            }
-
-            blocks = nextBlock;
-            System.out.println(blocks);
-
             //if a row is filled then remove the row
+
             boolean scoreOne = false;
             for (int i=0; i<rows; i++){
                 for (int a=0; a<columns; a++){
@@ -231,41 +144,12 @@ public class Main extends JFrame {
             }
             controlpanel.scoreNumberText.setText("     "+ score +"     ");
 
-            //if a row is filled then remove the row and move everything down by 1
-            for (int i=0; i<rows; i++){
-//                System.out.println(i + "i");
-                for (int a=0; a<columns; a++){
-                    if (gridArrange[i][a].getBackground() == Color.WHITE){
-                        System.out.println(a);
-                        break;
-                    }if (a == 9){
-                        System.out.println("works");
-                        for (int b=0; b<columns; b++){
-                            gridArrange[i][b].setBackground(Color.WHITE);
-                        }
-                        int reverseRow = 29-i;
-                        for (int s=0;s<reverseRow;s++){
-                            for (int d=9; d>0; d--){
-                                if (gridArrange[s][d].getBackground() == Color.BLACK){
-                                    gridArrange[s][d].setBackground(Color.WHITE);
-                                    gridArrange[s+1][d].setBackground(Color.WHITE);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-            //setup for the initial state of the game
-            if ((position / 10) - 100 == 29 || gridArrange[parseY() - 99][parseX()].getBackground() == Color.BLACK){
+            if ((position/10) -100 == 29 || gridArrange[parseY() - 99][parseX()].getBackground() == Color.BLACK){
                 gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
-                position = 1014;
+                position = 1004;
             }
         }
     });
-
     Main(){
         super();
         setTitle("Java Swing Tetris");
@@ -281,25 +165,19 @@ public class Main extends JFrame {
         setVisible(true);
         playArea.requestFocus();
     }
-
     public class ControlPanel extends JPanel{
         private JButton startButton;
         private JLabel scoreLabel;
-        public JTextArea scoreNumberText;
+        private JTextArea scoreNumberText;
         private JLabel nextPiece;
         private JPanel panelNextPiece;
         private JButton loadButton;
         private JButton saveButton;
-
-
         ControlPanel(){
-
-
             startButton = new JButton("Start");
             loadButton = new JButton("Load");
             saveButton = new JButton("Save");
             prepButtons();
-
             this.add(startButton);
             scoreLabel = new JLabel("Score");
             this.add(scoreLabel);
@@ -316,7 +194,6 @@ public class Main extends JFrame {
             this.add(loadButton);
             this.add(saveButton);
         }
-
         public void prepButtons(){
             startButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -349,19 +226,16 @@ public class Main extends JFrame {
                 }
             });
         }
-
     }
     public class PlayArea extends JPanel{
         //going to arrange the grid so that it is (1yyx)
         //example top left 1000
         //example bottom right 1299
         public int keypressed;
-
         PlayArea(){
             super();
             int rows = 30;
             int columns = 10;
-
             gridArrange = new JPanel[rows][columns];
             setLayout(new GridLayout(rows,columns));
             for (int a=0; a<rows; a++){
@@ -374,16 +248,12 @@ public class Main extends JFrame {
                 }
             }
             keyactions();
-
         }
-
-
         public void keyactions(){
             this.addKeyListener(new KeyListener() {
                 @Override
                 public void keyTyped(KeyEvent e) {
                 }
-
                 @Override
                 public void keyPressed(KeyEvent e) {
                     keypressed = e.getKeyCode();
@@ -392,14 +262,7 @@ public class Main extends JFrame {
                         if (parseX() == 0) {
 //                            System.out.println("fail");
                         } else {
-                            if (blocks == 1) {
-                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                            }
-                            if (blocks == 0){
-                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                                gridArrange[parseY() - 99][parseX()].setBackground(Color.WHITE);
-
-                            }
+                            gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
                             position -= 1;
                         }
                     }
@@ -407,14 +270,7 @@ public class Main extends JFrame {
                         if (parseX() == 9) {
 //                            System.out.println("fail");
                         }else{
-                            if (blocks == 1) {
-                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                            }
-                            if (blocks == 0){
-                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                                gridArrange[parseY() - 99][parseX()].setBackground(Color.WHITE);
-
-                            }
+                            gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
                             position += 1;
                         }
                     }
@@ -426,10 +282,8 @@ public class Main extends JFrame {
                     }
                     */
                 }
-
                 @Override
                 public void keyReleased(KeyEvent e) {
-
                 }
             });
         }
