@@ -102,7 +102,6 @@ public class Main extends JFrame {
     }
 
     int score = -1;
-
     public Timer timer  =new Timer(50, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -123,7 +122,6 @@ public class Main extends JFrame {
             */
 
             //if a row is filled then remove the row
-
             boolean scoreOne = false;
             for (int i=0; i<rows; i++){
                 for (int a=0; a<columns; a++){
@@ -188,11 +186,15 @@ public class Main extends JFrame {
             nextPiece = new JLabel("Next Piece");
             this.add(nextPiece);
             panelNextPiece = new JPanel();
-            panelNextPiece.add(new TextArea());
+//            panelNextPiece.add(new TextArea());
             this.add(panelNextPiece);
             setLayout(new FlowLayout());
             this.add(loadButton);
             this.add(saveButton);
+            JPanel piece = new JPanel();
+            piece.setSize(10,10);
+            piece.setBorder(new BasicBorders.FieldBorder(Color.BLACK, null, null, null));
+            panelNextPiece.add(piece);
         }
         public void prepButtons(){
             startButton.addActionListener(new ActionListener() {
