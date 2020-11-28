@@ -138,7 +138,7 @@ public class Main extends JFrame {
             }
         }
 
-        else if((gridArrange[y+1][x].getBackground() == Color.BLACK)){
+        else if((gridArrange[y+2][x].getBackground() == Color.BLACK)){
             blocked = true;
         }else {
             blocked = false;
@@ -180,7 +180,7 @@ public class Main extends JFrame {
                 gridArrange[parseY() - 99][parseX()].setBackground(Color.WHITE);
                 position += 10;
                 gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
-                gridArrange[parseY() - 99][parseX()].setBackground(Color.GRAY);
+                gridArrange[parseY() - 99][parseX()].setBackground(Color.BLACK);
             }else{
                 nextBlock = Math.round((int)(Math.random() * 6));
             }
