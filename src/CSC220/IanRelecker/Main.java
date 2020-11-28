@@ -235,24 +235,24 @@ public class Main extends JFrame {
             //if a row is filled then remove the row and move everything down by 1
             for (int i=0; i<rows; i++){
 //                System.out.println(i + "i");
-                    for (int a=0; a<columns; a++){
-                        if (gridArrange[i][a].getBackground() == Color.WHITE){
-                               System.out.println(a);
-                               break;
-                        }if (a == 9){
-                            System.out.println("works");
-                            for (int b=0; b<columns; b++){
-                                gridArrange[i][b].setBackground(Color.WHITE);
-                            }
-                            int reverseRow = 29-i;
-                            for (int s=0;s<reverseRow;s++){
-                                for (int d=9; d>0; d--){
-                                    if (gridArrange[s][d].getBackground() == Color.BLACK){
-                                        gridArrange[s][d].setBackground(Color.WHITE);
-                                        gridArrange[s+1][d].setBackground(Color.WHITE);
-                                    }
+                for (int a=0; a<columns; a++){
+                    if (gridArrange[i][a].getBackground() == Color.WHITE){
+                        System.out.println(a);
+                        break;
+                    }if (a == 9){
+                        System.out.println("works");
+                        for (int b=0; b<columns; b++){
+                            gridArrange[i][b].setBackground(Color.WHITE);
+                        }
+                        int reverseRow = 29-i;
+                        for (int s=0;s<reverseRow;s++){
+                            for (int d=9; d>0; d--){
+                                if (gridArrange[s][d].getBackground() == Color.BLACK){
+                                    gridArrange[s][d].setBackground(Color.WHITE);
+                                    gridArrange[s+1][d].setBackground(Color.WHITE);
                                 }
                             }
+                        }
                     }
                 }
             }
@@ -366,7 +366,7 @@ public class Main extends JFrame {
             gridArrange = new JPanel[rows][columns];
             setLayout(new GridLayout(rows,columns));
             for (int a=0; a<rows; a++){
-                    for (int b=0; b<columns; b++){
+                for (int b=0; b<columns; b++){
                     JPanel holdingPanel = new JPanel();
                     holdingPanel.setPreferredSize(new Dimension(30,20));
                     holdingPanel.setBorder(new BasicBorders.FieldBorder(Color.BLACK, null, null, null));
