@@ -170,6 +170,7 @@ public class Main extends JFrame {
 
             */
 
+
             // locks the block to a single block
             blocks = 0;
 
@@ -230,6 +231,33 @@ public class Main extends JFrame {
                 score++;
             }
             controlpanel.scoreNumberText.setText("     "+ score +"     ");
+
+            //if a row is filled then remove the row and move everything down by 1
+            for (int i=0; i<rows; i++){
+//                System.out.println(i + "i");
+                    for (int a=0; a<columns; a++){
+                        if (gridArrange[i][a].getBackground() == Color.WHITE){
+                               System.out.println(a);
+                               break;
+                        }if (a == 9){
+                            System.out.println("works");
+                            for (int b=0; b<columns; b++){
+                                gridArrange[i][b].setBackground(Color.WHITE);
+                            }
+                            int reverseRow = 29-i;
+                            for (int s=0;s<reverseRow;s++){
+                                for (int d=9; d>0; d--){
+                                    if (gridArrange[s][d].getBackground() == Color.BLACK){
+                                        gridArrange[s][d].setBackground(Color.WHITE);
+                                        gridArrange[s+1][d].setBackground(Color.WHITE);
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
+
+
 
             //setup for the initial state of the game
             if ((position / 10) - 100 == 29 || gridArrange[parseY() - 99][parseX()].getBackground() == Color.BLACK){
@@ -412,6 +440,19 @@ public class Main extends JFrame {
         public void stoptimer(){
             timer.stop();
         }
+
+//        public void startmovingdown(){
+//            //starting the tread for moving it down
+//            //testing with a block
+//            position = 1004;
+//            mvndwnthread = new movingdwnthread(position, block, running, gridArrange, keypressed);
+//            mvndwnthread.start();
+//        }
+//        public void endmovingdown() {
+//            mvndwnthread.interrupt();
+//        }
+
+
 
     }
 
