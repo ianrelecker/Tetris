@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 
 public class Main extends JFrame {
@@ -16,7 +17,6 @@ public class Main extends JFrame {
     private PlayArea playArea;
     public JPanel[][] gridArrange;
     public int position = 1004;
-    public int[] block;
     public boolean running;
     int rows = 30;
     int columns = 10;
@@ -89,22 +89,22 @@ public class Main extends JFrame {
         if (y==0){
             blocked = false;
         }
-        else if (x==0){
-            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
+        else if (y==0){
+            if (gridArrange[y+1][x].getBackground() == Color.BLACK) {
                 blocked = true;
             }else{
                 blocked = false;
             }
         }
-        else if (x==29){
-            if ((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)) {
+        else if (y==29){
+            if (gridArrange[y-1][x].getBackground() == Color.BLACK) {
                 blocked = true;
             }else{
                 blocked = false;
             }
         }
 
-        else if((gridArrange[y-1][x].getBackground() == Color.BLACK) || (gridArrange[y+1][x].getBackground() == Color.BLACK)){
+        else if((gridArrange[y+1][x].getBackground() == Color.BLACK)){
             blocked = true;
         }else {
             blocked = false;
@@ -112,15 +112,52 @@ public class Main extends JFrame {
         return blocked;
     }
 
-    public Timer timer  =new Timer(50, new ActionListener() {
+    public boolean blockMoveChecker() {
+        boolean blocked;
+        int x = parseX();
+        int y = parseY() - 100;
+        /*
+        System.out.println(x + "x");
+        System.out.println(y + "y");
+        */
+
+        if (y==0){
+            blocked = false;
+        }
+        else if (y==0){
+            if (gridArrange[y+1][x].getBackground() == Color.BLACK) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+        else if (y==29){
+            if (gridArrange[y-1][x].getBackground() == Color.BLACK) {
+                blocked = true;
+            }else{
+                blocked = false;
+            }
+        }
+
+        else if((gridArrange[y+1][x].getBackground() == Color.BLACK)){
+            blocked = true;
+        }else {
+            blocked = false;
+        }
+        return blocked;
+    }
+
+
+    int blocks = 0;
+    int nextBlock = 0;
+    int score = -1;
+
+    public Timer timer = new Timer(500, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             // gamerules can go here bc this is when the block gets moved down
-            if (!liteMoveChecker()) {
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
-                position += 10;
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
-            }
+            //
+            // adding more blocks
 
             //dance party mode that checks the coverage of all of the spaces
             /*
@@ -133,7 +170,48 @@ public class Main extends JFrame {
 
             */
 
+            // locks the block to a single block
+            blocks = 0;
+
+            //two on top
+            if (!blockMoveChecker() && blocks ==0) {
+                System.out.println(position + "p");
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                gridArrange[parseY() - 99][parseX()].setBackground(Color.WHITE);
+                position += 10;
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
+                gridArrange[parseY() - 99][parseX()].setBackground(Color.GRAY);
+            }else{
+                nextBlock = Math.round((int)(Math.random() * 6));
+            }
+            //single block
+            if (!liteMoveChecker() && blocks == 1) {
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                position += 10;
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
+            }else{
+                nextBlock = Math.round((int)(Math.random() * 6));
+            }
+            //cube
+            if (!blockMoveChecker() && blocks == 2) {
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                gridArrange[parseY() - 101][parseX()].setBackground(Color.WHITE);
+                gridArrange[parseY() - 101][parseX()-1].setBackground(Color.WHITE);
+                gridArrange[parseY() - 100][parseX()-1].setBackground(Color.WHITE);
+                position += 10;
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
+                gridArrange[parseY() - 101][parseX()].setBackground(Color.BLACK);
+                gridArrange[parseY() - 101][parseX()-1].setBackground(Color.BLACK);
+                gridArrange[parseY() - 100][parseX()-1].setBackground(Color.BLACK);
+            }else{
+                nextBlock = Math.round((int)(Math.random() * 6));
+            }
+
+            blocks = nextBlock;
+            System.out.println(blocks);
+
             //if a row is filled then remove the row
+            boolean scoreOne = false;
             for (int i=0; i<rows; i++){
                 for (int a=0; a<columns; a++){
                     if (gridArrange[i][a].getBackground() == Color.WHITE){
@@ -141,17 +219,23 @@ public class Main extends JFrame {
                     }if (a == 9){
                         for (int b=0; b<columns; b++){
                             gridArrange[i][b].setBackground(Color.WHITE);
+                            scoreOne = true;
+
                         }
                     }
                 }
             }
-            
-
-            if ((position/10) -100 == 29 || gridArrange[parseY() - 99][parseX()].getBackground() == Color.BLACK){
-                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
-                position = 1004;
+            //changes the score when a row is cleared
+            if (scoreOne){
+                score++;
             }
+            controlpanel.scoreNumberText.setText("     "+ score +"     ");
 
+            //setup for the initial state of the game
+            if ((position / 10) - 100 == 29 || gridArrange[parseY() - 99][parseX()].getBackground() == Color.BLACK){
+                gridArrange[parseY() - 100][parseX()].setBackground(Color.BLACK);
+                position = 1014;
+            }
         }
     });
 
@@ -174,7 +258,7 @@ public class Main extends JFrame {
     public class ControlPanel extends JPanel{
         private JButton startButton;
         private JLabel scoreLabel;
-        private JTextArea scoreNumberText;
+        public JTextArea scoreNumberText;
         private JLabel nextPiece;
         private JPanel panelNextPiece;
         private JButton loadButton;
@@ -281,7 +365,14 @@ public class Main extends JFrame {
                         if (parseX() == 0) {
 //                            System.out.println("fail");
                         } else {
-                            gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                            if (blocks == 1) {
+                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                            }
+                            if (blocks == 0){
+                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                                gridArrange[parseY() - 99][parseX()].setBackground(Color.WHITE);
+
+                            }
                             position -= 1;
                         }
                     }
@@ -289,7 +380,14 @@ public class Main extends JFrame {
                         if (parseX() == 9) {
 //                            System.out.println("fail");
                         }else{
-                            gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                            if (blocks == 1) {
+                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                            }
+                            if (blocks == 0){
+                                gridArrange[parseY() - 100][parseX()].setBackground(Color.WHITE);
+                                gridArrange[parseY() - 99][parseX()].setBackground(Color.WHITE);
+
+                            }
                             position += 1;
                         }
                     }
